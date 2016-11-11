@@ -1,14 +1,20 @@
+var config = {
+	token: process.env.PIPEBOT_TOKEN,
+	name: process.env.PIPEBOT_NAME?process.env.PIPEBOT_NAME:"pipebot",
+	icon_emoji: process.env.PIPEBOT_ICON?process.env.PIPEBOT_ICON:":desktop_computer:",
+	channel: process.env.PIPEBOT_CHANNEL?process.env.PIPEBOT_CHANNEL:"general"
+};
 var bot = new (require("slackbots"))({
-	token: "xoxb-102610855889-1LhNkiUIDHgvMistVt0tdiVG",
-	name: "pipebot"
+	token: config.token,
+	name: config.name
 });
 var params = {
-	icon_emoji: ":desktop_computer:"
+	icon_emoji: config.icon_emoji
 };
 var lines = [];
 var updateLoop = function() {
 	if(lines.length > 0) {
-		bot.postMessageToChannel("general", lines.shift(), params, function(result) {
+		bot.postMessageToChannel(config.channel, lines.shift(), params, function(result) {
 			if(!result.ok) {
 				console.error(result);
 			}
