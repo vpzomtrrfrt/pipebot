@@ -12,6 +12,7 @@ var params = {
 	icon_emoji: config.icon_emoji
 };
 var lines = [];
+var ended = false;
 var updateLoop = function() {
 	if(lines.length > 0) {
 		bot.postMessageToChannel(config.channel, lines.shift(), params, function(result) {
@@ -21,7 +22,14 @@ var updateLoop = function() {
 			updateLoop();
 		});
 	}
-	setTimeout(updateLoop, 0);
+	else {
+		if(!ended) {
+			setTimeout(updateLoop, 0);
+		}
+		else {
+			bot.ws.close();
+		}
+	}
 };
 bot.on('start', updateLoop);
 process.stdin.resume();
@@ -36,4 +44,6 @@ process.stdin.on('data', function(chunk) {
 process.stdin.on('end', function() {
 	lines.push(remainder);
 	remainder = "";
+
+	ended = true;
 });
